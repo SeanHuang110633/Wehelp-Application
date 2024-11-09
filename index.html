@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebHelp BootCamp 6th Application</title>
+    <!-- 引入字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
+    <!-- 引入 Font Awesome icon庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 基本頁面樣式設定 */
+        body {
+            font-family: "Noto Sans TC", serif;
+            font-weight: 400;
+            min-height: 100vh;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #fefcf7;
+            color: #333333;
+        }
+
+        /* 容器樣式，使用 flex 布局實現響應式設計 */
+        .container {
+            width: 100%;
+            max-width:100%;
+            margin: 0px;
+            overflow: hidden;
+            padding: 20px 0px 20px 0px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap:1%
+        }
+
+        /* 頁面標題區域樣式 */
+        header {
+            background: #FFFBF0; 
+            padding: 5px 0px 5px 0px; 
+            width: 100%;
+            border-bottom: 2px solid #95796F;
+        }
+
+        /* 標題樣式 */
+        header h1 {
+            margin: 0;
+            margin-left:20px;
+            text-align: left;
+            font-size: 24px;
+            color: #95796F; 
+        }
+
+        /* 個人資料區塊樣式 */
+        .profile {
+            flex: 1 1 25%; /* 使用 flex-grow 做擴展 */
+            max-width: 20%;
+            text-align: center;
+            background-color: #FFFBF0;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #95796F;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        /* 個人照片樣式 */
+        .profile .img-container img {
+            width: 90%; 
+            aspect-ratio: 1/1; /* 強制圖片為正方形 */
+            object-fit: cover; /* 確保圖片內容完整且不變形 */
+            border-radius: 50%; 
+            margin: 0 auto; /* 確保圖片水平居中 */
+            display: block; /* 確保圖片居中 */
+            border: 2px solid #95796F;
+        }
+
+        .profile .data-container  {
+           display: flex;
+           flex-direction: column;
+        }
+
+        .profile .data-container .link  {
+           display: flex;
+           flex-direction: row;
+           justify-content: center;
+           align-items: center;
+           margin-top: 10px;
+        }
+
+        .github-link, .aws-link {
+            display: inline-flex;
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .github-link {
+            margin-right : 15px ;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .github-link a {
+            color: #333333;
+            text-decoration: none;
+        }
+
+        .aws-link {
+            padding-top: 5px;
+        }
+
+
+        /* 輪播容器樣式 */
+        .carousel-container {
+            flex: 1 1 70%;
+            max-width: 70%;
+            background-color: #FFFBF0;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #95796F;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 輪播內容區域樣式 */
+        .carousel-content {
+            display: none; /* 預設隱藏 */
+            background-color: #FFFBF0;
+            padding: 5px 15px;
+            border-radius: 5px;
+            height: 65vh;
+            overflow-y: auto;
+            border: 2px solid #95796F;
+            font-size: 18px;
+        }
+
+        .carousel-content p {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .carousel-content h2 {
+            margin-bottom: 5px;
+            color: #95796F; 
+        }
+
+        .carousel-content h3 {
+            margin-bottom: 5px;
+            color: #95796F; 
+        }
+
+        .carousel-content ul {
+            padding-left: 20px;
+        }
+        
+
+        /* 滾動條樣式 */
+        
+        .carousel-content::-webkit-scrollbar {
+            /* 寬度設定 */
+            width: 10px;
+        }
+
+        .carousel-content::-webkit-scrollbar-track {
+            /* 滾動條軌道樣式 */
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        .carousel-content::-webkit-scrollbar-thumb {
+            /* 滑塊樣式 */
+            background: #888;
+            border-radius: 5px;
+        }
+
+        .carousel-content::-webkit-scrollbar-thumb:hover {
+            /* 滑塊懸停樣式 */
+            background: #666;
+        }
+
+        /* 當前輪播內容 */
+        .active {
+            display: block;
+        }
+
+
+        /* 輪播圖nav樣式 */
+        .carousel-nav {
+            margin-bottom: 10px;
+        }
+
+        /* 按鈕容器 */
+        .carousel-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: left;
+            flex-wrap: wrap;
+        }
+
+        /* 按鈕樣式 */
+        .nav-btn {
+            padding: 6px 5px;
+            background-color: #c2aaa1;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+
+        .nav-btn:hover {
+            background-color: #95796F;
+        }
+
+        .nav-btn.active-btn {
+            background-color: #765f57;
+            border: 3px solid #c09e95;
+        }
+
+        /* RWD：寬度小於 768px 時 */
+        @media (max-width: 768px) {
+            
+            .container {
+                flex-direction: column;
+                align-items: center;
+                margin: 10px 0;
+                padding: 0 20px; 
+            }
+
+
+            .profile {
+                flex-direction: row;
+                width: 100%;
+                max-width: 100%;
+                align-items: center;
+                gap: 5px;
+            }
+            
+        
+            .profile .img-container img {
+                width: 70%; 
+            }
+
+            .carousel-container {
+                width: 100%;
+                max-width: 100%;
+                margin: 10px 0; 
+            }
+        }
+
+        /* RWD：寬度小於 500px 時 */
+        @media (max-width: 500px) {
+            .profile {
+                width: 100%;
+                padding: 5px;
+            }
+
+            .profile .img-container img {
+                width: 85%; 
+                margin-right: 10px;
+            }
+
+            .profile .github-link  {
+                margin-top: 5px;
+            }
+
+            .carousel-container {
+                width: 100%;
+                max-width: 100%;
+                margin: 10px 0; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 頁面標題 -->
+    <header>
+        <h1>WebHelp BootCamp 6th Application</h1>
+    </header>
+
+    <!-- 主要內容容器 -->
+    <div class="container">
+        <!-- 個人資料區塊 -->
+        <div class="profile">
+            <div class="img-container">
+                <img src="./777.png" alt="avatar">
+            </div>
+            
+            <div class="data-container">
+                <div class="content">Hi! I'm Sean, used to be a public servant, now on a mission to become a software engineer.</div>
+                <div class="link">
+                    <!-- GitHub 連結 -->
+                    <div class="github-link">
+                        <a href="https://github.com/SeanHuang110633?tab=repositories" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                    <div class="aws-link">
+                        <a href="https://www.credly.com/badges/2eeb4f22-ba94-4bc4-8ad2-9518d2eff19a" target="_blank">
+                            <img src="./aws.png" alt="AWS Certified Cloud Practitioner" style="width:40px; height:auto;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- 輪播內容區域 -->
+        <div class="carousel-container">
+            <!-- 導航按鈕 -->
+            <div class="carousel-nav">
+                <div class="carousel-buttons">
+                    <button class="nav-btn active-btn">個人簡介</button>
+                    <button class="nav-btn">申請動機</button>
+                    <button class="nav-btn">相關學習</button>
+                    <button class="nav-btn">學習安排</button>
+                    <button class="nav-btn">選擇評估</button>
+                    <button class="nav-btn">情緒處理</button>
+                    <button class="nav-btn">開發心得</button>
+                    <button class="nav-btn">社群連結</button>
+                </div>
+            </div>
+
+            <!-- 輪播內容 -->
+            <!-- 個人簡介 -->
+            <div class="carousel-content active">
+                <h2>個人簡介</h2>
+                <p>彭彭老師及助教們好 ，我是Sean (黃昱鈞)，27歲，桃園人，畢業於武陵高中及中央警察大學公共安全系；應屆通過國家考試後在臺北的政府機關服務4年，甫於今年6月中離職，全心投入轉職軟體工程師。
+                    平時熱愛運動、健身，有跆拳道黑帶、救生員證照、曾是籃球及田徑校隊，可以說讀書工作外的時間幾乎都在運動，工作後迄今仍定期參加一些田徑小比賽(怕變胖)，離職後基本上過著三點一線(圖書館、健身房或操場、回家)的生活，簡單、枯燥但愉快自適。</p>
+                <div class="intro-section">
+                    <h3>選擇轉職的原因 : 努力虛擲、成長停滯</h3>
+                    <p>
+                        當初選擇就讀警大，除考量家庭因素外，也是希望能善盡己力、回饋社會；然而，在任公職期間，
+                        或因業務特性所致，或因制度文化使然，所作之事多流於表面形式，努力難以轉化為實質貢獻，
+                        心中常感到不踏實。
+                    </p>
+                    <p>
+                        再者，公部門業務多與民生相關，經常動輒得咎且有涉法疑慮，久之形成謹小慎微、保守僵化的工作氛圍，
+                        使得制度革新與個人精進相對困難；然而，公門內縱有諸多問題，但其穩定安逸、福利健全的特點，
+                        確實仍令不少人稱羨。
+                    </p>
+                    <p>
+                        曾經我也勸過自己往好處看，莫再多想，生活無非圖個安穩；但日復一日，為重複空洞的工作忙碌加班，
+                        為反覆出現的相同問題殫精竭慮，除了疲勞與內耗，實難感受到任何成長，同時我也無法自欺欺人，
+                        以現職的光明面強壓心中漸趨沉重的滯塞感與危機感；最終，經過深刻自我審視與多方諮詢後，
+                        下定轉職決心。
+                    </p>
+                </div>
+            
+                <div class="intro-section">
+                    
+                    <h3>選擇軟體工程師的理由 : 實現自我、回饋社會</h3>
+                
+                    <p>
+                        承上，幾經反思與探索，我總結出理想的職涯必須滿足 : 技術為本、不斷精進、回饋社會等三個條件；
+                        一者，技術導向的工作較有客觀標準，有利自我衡量與持續精進，而打磨技術、累積經驗的過程，
+                        除能厚實職涯的底氣，也可進一步完成自我提升與實現。
+                    </p>
+                    <p>
+                        二者，若此生努力僅是為了獨善其身，難免有些可惜，故也希望於職涯中累積的經驗與技術，
+                        終能回饋社群、協助他人成長，也算是實現進入公職時的初衷；綜合以上要素，
+                        我認為軟體工程師最能契合需求，且數年前曾利用就職前的空檔，
+                        參加臺大資訊系統訓練班「Python程式設計與網站擷取」課程，在職期間也負責過單位內部網頁管理，
+                        故對於撰寫程式、操作網頁並非全然陌生。
+                    </p>
+                    <p>
+                        其後，經歷一段時間的學習與實踐，已成功使用 Vue、Spring 框架及 MySQL 實現前後端分離的客戶管理系統，
+                        提供朋友的健身工作室使用，雖然深知如此程度相較實務工作尚微不足道，
+                        但過程中克服諸多困難的成就感，以及親手完成系統並幫助需要之人的滿足感，
+                        確實讓我感受到久違的成長與喜悅，至此，對選擇轉職軟體工程師也有了更深的確信。
+                    </p>
+                </div>
+            </div>
+            <!-- 申請動機 -->
+            <div class="carousel-content">
+                <h2>申請動機</h2>
+
+                <h3>善用社群資源，釐清自學盲點</h3>
+                <p>近半年自學期間，主要透由udemy、youtube及bilibili等平台進行學習，豐富的資源搭配ChatGPT等AI工具確實提升了學習效率，但也因缺乏技術經驗，抑或錯誤的認知，導致問題有時無法聚焦，未能獲得滿意解答；另由於身邊並無親友從事軟體相關工作或具有轉職經驗，故有關產業現狀與趨勢、實際開發的情境及轉職者求職情形等疑惑，僅能透由各大論壇及軟體社群的討論內容加以推測，較難掌握具體面貌；此外，目前雖已掌握Java及Spring框架的基本操作，並實現了前述的小專案，但也明白自身程度尚不足應對實際工作需求，因此，希望借助轉職培訓營的資源與教學經驗，進一步釐清自身學習盲點，瞭解產業及轉職的現況與趨勢。</p>
+                
+                <h3>認同Wehelp培訓方式及理念</h3>
+                <p>由於自學過程中，接觸的多半是傳統的講授教學，雖能建立基本觀念，但也常導致「一聽就會，一寫就廢」的窘境，故深知若要培養將抽象需求轉化為程式碼的能力，則必然需要大量實作練習；於是在比較多間轉職培訓機構的課程後，我認為Wehelp所採用的任務導向教學模式最能培養學員轉化需求、獨立解決問題的能力；此外，在觀賞第4、5屆Wehelp學員的Demo Day發表後，每位學員無論專案本身、呈現方式及觀眾應答的表現都令人十分佩服，故也希望能有機會加入Wehelp，一同學習成長。</p>
+            </div>
+            <!-- 相關學習 -->
+            <div class="carousel-content">
+                <h2>曾經做過哪些軟體工程技術相關的學習？</h2>
+                <div>
+                    <h3>2024年1月-4月 : 學習 HTML、CSS、Javascript，學習JAVA，MySQL、Spring框架</h3>
+                    <p>
+                        <strong>學習資源 : </strong>網路開發全攻略(Udemy)、 Java入門到精通(Udemy)、MySQL資料庫全攻略(彭彭老師TY頻道的)及其他TY、BiliBili教學與官方文件
+                    </p>
+                    <p>
+                        <strong>學習重點 : </strong>因轉職目標為後端軟體工程師，且尚未離職，時間較有限，故將大多心力投注在Java、MySQL及Spring框架的學習，目標是掌握基礎觀念與語法。
+                    </p>
+                    <h3>2024年4月-8月 : 專案實作 + 考取AWS Certified Cloud Practitioner證照</h3>
+                    <p>
+                        <strong>學習資源 : </strong>YT、BiliBili的Spring及Vue框架教學、 Spring及Vue官方文件、Ultimate AWS Certified Cloud Practitioner CLF-C02(Udemy)、AWS 官方文件
+                    </p>
+                    <p>
+                        <strong>學習重點 : </strong>因朋友的健身工作室正巧有客戶管理需求，我也希望透由專案實作加深學習效果，便學習Vue框架， 搭配 Spring + MySQL實現一個簡易的管理系統 (專案細節請點此)。
+                        此外，學習部署相關技術時接觸到AWS，感覺相當有趣，便透由準備證照考試的方式加以學習，並於8月中旬通過AWS Certified Cloud Practitioner的考試(電子證明請點左側小圖示)。
+                    </p>
+                    <h3>2024年9月迄今 : 資料結構演算法、作業系統等CS本質學能</h3>
+                    <p>
+                        <strong>學習資源 : </strong>臺灣大學開放式課程-計算機概論(于天立老師)、聯合大學開放式課程-資料結構 & 演算法 & 作業系統(陳士杰老師)
+                    </p>
+                    <p>
+                        <strong>學習重點 : </strong>專案實作時，雖感受到java、MySQL等基礎仍不夠扎實，諸多技術與工具也有待著一一掌握，但同時因缺乏計算機及網路通訊等相關知識，常對程式碼背後如何運作?為何這樣設計?又因何錯誤?感到困頓與不踏實，也認為若繼續在充滿疑惑、基礎薄弱的狀態上疊加新知識，似有些捨本逐末，且不利長期學習；因此，決定利用一段較完整的期間，
+                        將學習重心轉移到資料結構、演算法等資訊本科相關知識，並規劃透由明年初的研究所考試檢驗學習成果，期望能為後續的學習打下良好基礎。<strong>(Github中DS practic repository紀錄這段期間以Java實現的資料結構的程式碼)</strong>
+                    </p>
+                </div>
+            </div>
+            <!-- 學習安排 -->
+            <div class="carousel-content">
+                <h2>如果參與這個訓練，會怎麼安排學習時間？</h2>
+                <p>若有幸加入Wehelp，將繼續目前的生活型態，將運動與睡覺全數投入轉職學習中，各階段的安排說明如下:</p>
+                <div>
+                    <h3>第一階段：網站開發基礎</h3>
+                    <p>
+                        配合課程規劃再次學習javascript與Python，並加強較不熟悉的CSS、RWD及FastAPI技術。
+                        另由於此階段前期尚與研究所考試重疊，故仍將投注部分心力應考，但務必會完成每周進度，惟可能較無餘裕安排課程外的學習。
+                    </p>
+                    <h3>第二階段：電商網站實務</h3>
+                    <p>
+                        投注全部心力配合課程規劃，深入學習未曾接觸過的景點API及金流服務串接等技巧。如尚有餘裕，將複習Java與Spring框架基礎，並先期規劃第三階段的個人專案。
+                        此外亦將繼續熟悉各類AWS雲端工作的操作，期能通過AWS Certified Developer認證，也為後續階段的學習預做準備。
+                    </p>
+                    <h3>第三階段：個人專案、求職準備</h3>
+                    <p>
+                        全力投入專案製作，深入瞭解使用到的技術，為後續求職面試做足準備。如尚有餘裕，將透由寫leetCode的方式加深並維持對資料結構與演算法的掌握。
+                    </p>
+                </div>
+            </div>
+            <!-- 評估選擇 -->
+            <div class="carousel-content">
+                <h2>軟體技術日新月異，如何確定選擇投入的領域是正確有回報的？</h2>
+                <p>
+                    如從現實層面考量這個問題，必須承認我不能確定，且似乎不可能確定；但即使如此也無礙我做出投入軟體領域的選擇；說明如下:
+                </p>
+                <h3>自我實現，本自俱足</h3>
+                <p>
+                    在思考轉職、決定方向到付諸實行的過程中，他人質疑與自我懷疑所在多有，乃至如今，也偶有焦慮；確實，不論是因為AI快速發展或軟體產業本身的轉變
+                    ，求職難度提升已是不爭事實，社群論壇也充斥著「軟工將被AI取代」、「轉職末班車早已開走」等言論，此情此景無疑增添了許多憂慮；不過，
+                    我的想法就如個人介紹所述，軟體轉職此一抉擇，是本於內心對自我實現的追求，是基於反思與探索所做出的決斷，我清楚前路漫漫，險阻重重，也明白未來並非全是光鮮亮麗，更多是默默耕耘；從起初利用公餘間斷學習，到如今每日全心投入，收穫自身的突破成長，以及相伴而生的喜悅，便已是回報，至於能否轉職成功，自是衷心期待，也會努力追求，但我想那不是目標本身，應是沿途風景；過去，不論求學或工作，大多努力均是為了符合社會期待、滿足師長期許，最終兌現所謂成功人生；
+                    而今，已釐清內心需求，往後不論窮達，所有努力皆不再為了其他，而是衷於內心，讓自我實現成為目的本身，是故本自俱足，便再無須回報。
+                </p>
+                <h3>理性堅持，勇於嘗試</h3>
+                <p>
+                    撇除上述有些天真浪漫的個人想法，回到實際層面，假使結局真就是現實無情打臉，投入終成錯付，其實也並無大礙，畢竟已明確心志，那麼再次本於內心所求，理性評估並做出其他選擇，又有何妨?
+                    此外如題所述，現今科技發展快速、技術不斷迭代，身處其中確實有著諸多挑戰，但回顧歷史，如今科技技術能有此進展，不正是建立在前人的種種錯誤與不斷嘗試上?他們之中，即便是那些流芳後世的科學家，又有誰是起初便知曉投入必然成功，更多是經由不斷犯錯與改進，方於最終實現理想?
+                    所以，正確本不可期，錯誤亦不可恥，生而為人本有侷限，擔心懼怕在所難免，重要的是不要盲目自欺，也不要輕言放棄，要時時反省並懷揣理性去貫徹內心堅持，也許所堅持的未必就是正確的，但不正確並不代表沒有意義。
+                </p>
+            </div>
+            <!-- 情緒處理 -->
+            <div class="carousel-content">
+                <h2>描述一件產生明顯負面情緒的經歷，如何處理該情緒？</h2>
+                <p>
+                    工作起初，曾因不諳法令及一連串個人疏忽導致專案進度嚴重落後，除連累前輩、同事遭受責難，假日還須一同加班補救，當時的自責、懊惱與羞愧仍記憶猶新，
+                    且因個性較不喜歡麻煩他人，故遭逢此類事件總是尤為難受，也因而衍生以下通案做法:                
+                </p>
+                <h3>分析問題肇因，避免類案再生</h3>
+                <p>
+                    處理情緒之前，還得先釐清肇生負面情緒的根源，否則有些治標不治本；而經由理性檢討分析後，就外在層面，能夠發掘問題癥結、擬定改進措施，防止造成負面心緒的事件重演，
+                    就內在層面，檢視問題的過程，能暫時將注意力聚焦事件本身，以較客觀的角度看待問題，通常也能讓心情稍加平復。
+                </p>
+                <h3>表達真實感受，接納必然情緒</h3>
+                <p>
+                    呈上，在理清問題及思緒後，我會主動向受到牽連的人致歉，目的並非尋求諒解，畢竟他人本無義務給予原諒，但真誠表達內心歉疚，不僅是與人互動的基本素養，也是與情緒達成和解的正向途徑；正如前述，世無完人，犯錯在所難免，只能要求自己以理性誠實的態度面對過錯，盡力彌補，而過程中產生的諸多情緒，無可避免也無須避免；是故，處理負面情緒，順其自然即可，意即不應刻意忽視、也不過份壓抑，允許其存在，並靜觀其生滅，
+                    正如「西藏生死書」所提，雜念與情緒可將其比做浮雲，內心自性則如天空，天晴有時、陰霾亦有時，皆是自然，但晴雨之後，天空仍是天空，不曾或變。
+                </p>
+            </div>
+            <!-- 開發心得 -->
+            <div class="carousel-content">
+                <h2>關於這份申請網頁，分享一個開發時的技術心得</h2>
+                <p>由於轉職目標是Java後端工程師，故起初學習完html、CSS及基礎javascript後就未再複習，故製作本申請網頁時有些難以下手，但過程還是很有趣，也重拾了一些初學時的記憶，由於網頁大多以基礎html、CSS實現，故僅分享以JavaScript實現輪播圖的心得 :</p>
+                <h3>1. 初始化</h3>
+                <p>
+                    在初始狀態下，為「個人介紹」的內容和對應按鈕設置 <code>active</code> 和 <code>active-btn</code> 類別，其中：
+                </p>
+                <ul>
+                    <li><code>active</code> 類別使內容的 <code>display</code> 屬性設為 <code>block</code>，讓該內容顯示在頁面上。</li>
+                    <li>其他內容的 <code>display</code> 屬性為 <code>none</code>，因此它們處於隱藏狀態。</li>
+                </ul>
+                
+                <h3>2. 選取內容和按鈕</h3>
+                <p>
+                    使用 <code>document.querySelectorAll</code> 分別取得 <code>.carousel-content</code>（輪播內容）和 
+                    <code>.nav-btn</code>（導航按鈕）的 NodeLists。每個按鈕都會綁定一個 <code>click</code> 事件，當按鈕被點擊時會觸發 
+                    <code>showContent</code> 函數。
+                </p>
+                
+                <h3>3. click 事件的工作原理</h3>
+                <p>
+                    每次點擊按鈕時，<code>click</code> 事件會將該按鈕在 NodeLists 中的 <code>index</code> 作為參數傳給 
+                    <code>showContent</code> 函數。
+                </p>
+                
+                <h3>4. showContent 函數的執行步驟</h3>
+                <p><code>showContent</code> 函數的執行步驟如下：</p>
+                <ul>
+                    <li>遍歷所有內容和按鈕，檢查並移除其中的 <code>active</code> 和 <code>active-btn</code> 類別。</li>
+                    <li>這樣可以將所有內容和按鈕的狀態重置為初始狀態，確保後續僅有選中的內容和按鈕處於「顯示」和「被選中」狀態。</li>
+                </ul>
+                
+                <h3>5. 顯示選中內容</h3>
+                <p>
+                    根據選中按鈕的 <code>index</code>，在 NodeLists 中找到對應的內容和按鈕，並分別為它們添加 
+                    <code>active</code> 和 <code>active-btn</code> 類別。<code>active</code> 類別讓內容顯示在頁面上，而 
+                    <code>active-btn</code> 類別則用來標記當前選中的按鈕。
+                </p>
+            </div>
+            <!-- 社群連結 -->
+            <div class="carousel-content">
+                <h2>如何看待自身工作和整個社會群體的連結關係？</h2>
+                <p>過去我對於工作與社會連結的想法有些過於狹隘，總認為須直接有助益於社會方能稱之，但在經歷公職並接觸軟體學習後，想法已有轉變，具體如下 :</p>
+                <p>
+                    <strong>在工作層面</strong>，雖尚不清楚實際情形如何，但我認為軟體技術的目的是將使用者的需求轉化為具體可執行的工具或服務，工程師作為技術使用者，一來透由本職工作提供消費大眾更快、更穩定、更人性化的服務，從早期的社群通訊軟體、goole map到近年的外送平台、數位銀行等服務，均大幅提升了便利性並改變了人面的生活樣貌 ；二來，即使大多工程師本身可能並未參與技術工具的開發，但使用工具的同時，可透由疊加自身經驗創造更多可能性，
+                    也能適時給予反饋，促進技術迭代，從而使軟體技術生態系更加豐富完善，不僅有助軟體社群共同成長，技術進步也能打造更好的應用，創造或滿足更多需求。
+                </p>
+                <p>
+                    <strong>在個人層面</strong>，自學的過程中受惠於諸多技術社群或個人的分享，對於軟體社群的活躍與開放感到非常認同，於是希望自己在累積足夠經驗與技術後，也能夠做為資訊的提供者，為他人解惑，為軟體社群略盡綿薄，回饋在成長學習過程中收穫的幫助與善意，促進正向循環。再者，雖目前尚無法構想，但掌握一門技術後，將其用於有利公眾之事，也是我希望職涯條件必須滿足高技術性的原因，
+                    同前所述，軟體做為滿足現代社會需求的主要工具之一，相信仍有著無限可能的應用等待發掘，期待未來具備足夠能力後，能實現此一目標，也算回應當初選擇公職的初衷。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 拿到carousel-content和按鈕
+        const carouselItems = document.querySelectorAll('.carousel-content');
+        const navButtons = document.querySelectorAll('.nav-btn');
+        console.log(navButtons)
+
+        // 顯示選中的輪播項目(active)，對應的btn亮起來(active-btn)
+        function showContent(index) {
+            
+            // 移除輪播項目和按鈕的active class，兩者回歸起始狀態
+            carouselItems.forEach(item => item.classList.remove('active'));
+            navButtons.forEach(btn => btn.classList.remove('active-btn'));
+            
+            // 選中的輪播項目和按鈕加上active class
+            carouselItems[index].classList.add('active');
+            navButtons[index].classList.add('active-btn');
+        }
+
+        // 為每個按鈕綁定點擊事件
+        navButtons.forEach((button, index) => {
+            button.addEventListener('click', () => showContent(index));
+        });
+    </script>
+</body>
+</html>
